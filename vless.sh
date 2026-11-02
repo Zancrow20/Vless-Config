@@ -99,20 +99,31 @@ echo " Напоминание: Убедитесь, что порт 443 (TCP) о�
 echo " Для UFW: sudo ufw allow 443/tcp"
 echo " Для iptables: sudo ip6tables -A INPUT -p tcp --dport 443 -j ACCEPT"
 
-# 6. Вывод данных для клиента
+# 6. Формирование ссылки и генерация QR-кода
+FULL_LINK="vless://${UUID}@[${SERVER_IPv6}]:443?security=reality&encryption=none&pbk=${PUB_KEY}&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=microsoft.com&sid=${SHORT_ID}#Netcup_Reality"
+
 echo "============================================="
-echo " НАСТРОЙКИ ДЛЯ КЛИЕНТА (v2rayNG / Hiddify / NekoBox):"
+echo " НАСТРОЙКИ ДЛЯ КЛИЕНТА:"
 echo "============================================="
 echo "Адрес (Server):   $SERVER_IPv6"
 echo "Порт (Port):      443"
 echo "ID (UUID):        $UUID"
 echo "Flow:             xtls-rprx-vision"
-echo "Network (Type):   tcp"
 echo "Security:         reality"
 echo "SNI:              microsoft.com"
 echo "Public Key (pbk): $PUB_KEY"
+echo "ShortId (sid):    $SHORT_ID"
 echo "Fingerprint (fp): chrome"
 echo "============================================="
-echo "Готовая ссылка подключения:"
-echo "vless://${UUID}@[${SERVER_IPv6}]:443?security=reality&encryption=none&pbk=${PUB_KEY}&headerType=none&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=microsoft.com#Netcup_Reality"
+
+# Генерируем QR-код как PNG
+if command -v qrencode &> /dev/null; then
+    qrencode -t PNG -o /root/qrcode.png -l L -s 10 "$FULL_LINK"
+    echo " QR-код сохранён: /root/qrcode.png"
+    echo " Откройте его в графическом просмотрщике или скачайте на телефон."
+else
+    echo "⚠️ qrencode не установлен. Установите: sudo apt install qrencode"
+    echo "Ссылка для ручного ввода:"
+    echo "$FULL_LINK"
+fi
 echo "============================================="
