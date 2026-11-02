@@ -25,8 +25,8 @@ echo " Генерация криптографических ключей и UUI
 # Генерируем новый уникальный UUID при каждом запуске
 UUID=$(xray uuid)
 KEYS=$(xray x25519)
-PRIV_KEY=$(echo "$KEYS" | grep "Private key:" | awk '{print $NF}')
-PUB_KEY=$(echo "$KEYS" | grep "Public key:" | awk '{print $NF}')
+PRIV_KEY=$(echo "$KEYS" | grep -i "private" | sed 's/.*: //')
+PUB_KEY=$(echo "$KEYS" | grep -i "public" | sed 's/.*: //')
 
 # 3. Запись конфигурации
 # ⚠️ ВАЖНО: Замените 2a0a:4cc0:c1:3f20::1 на РЕАЛЬНЫЙ IPv6-адрес вашего сервера!
