@@ -117,13 +117,13 @@ echo "Fingerprint (fp): chrome"
 echo "============================================="
 
 # Генерируем QR-код как PNG
+# Генерация компактного QR-кода в терминале
 if command -v qrencode &> /dev/null; then
-    qrencode -t PNG -o /root/qrcode.png -l L -s 10 "$FULL_LINK"
-    echo " QR-код сохранён: /root/qrcode.png"
-    echo " Откройте его в графическом просмотрщике или скачайте на телефон."
+    echo " Отсканируйте этот код камерой телефона:"
+    echo "============================================="
+    qrencode -t UTF8 -l L -s 2 "$FULL_LINK"
+    echo "============================================="
 else
-    echo "⚠️ qrencode не установлен. Установите: sudo apt install qrencode"
-    echo "Ссылка для ручного ввода:"
-    echo "$FULL_LINK"
+    echo "⚠️ Установите qrencode: sudo apt install qrencode -y"
 fi
 echo "============================================="
