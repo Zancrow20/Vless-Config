@@ -80,14 +80,14 @@ EOF
 
 # 4. Тестирование и перезапуск службы
 echo " Тестирование конфигурации..."
-if xray test -config /usr/local/etc/xray/config.json | grep -q "Configuration OK"; then
+if xray run -test -c /usr/local/etc/xray/config.json | grep -q "Configuration OK"; then
     echo " Конфигурация успешна! Перезапуск службы..."
     systemctl restart xray
     systemctl enable xray
 else
     echo " Ошибка: Финальный конфиг содержит синтаксические ошибки!"
     echo "Детали ошибки:"
-    xray test -config /usr/local/etc/xray/config.json
+    xray run -test -c /usr/local/etc/xray/config.json
     exit 1
 fi
 
