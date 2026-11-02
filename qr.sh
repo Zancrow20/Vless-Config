@@ -1,4 +1,3 @@
-cat > /root/qr.sh << 'EOF'
 #!/bin/bash
 LINK=$(cat /root/vless_link.txt 2>/dev/null)
 [ -z "$LINK" ] && echo "Нет файла vless_link.txt!" && exit 1
@@ -10,5 +9,3 @@ for fmt in "ANSI -s 1" "ANSI -s 2" "ANSIUTF8 -s 3" "ANSI2 -s 2"; do
   read -p "> " ans
   [ "$ans" = "y" ] && break
 done
-EOF
-chmod +x /root/qr.sh
