@@ -99,7 +99,7 @@ echo " Напоминание: Убедитесь, что порт 443 (TCP) о�
 echo " Для UFW: sudo ufw allow 443/tcp"
 echo " Для iptables: sudo ip6tables -A INPUT -p tcp --dport 443 -j ACCEPT"
 
-# 6. Формирование ссылки и вывод QR-кода
+# 6. Формирование ссылки и вывод QR-кода в терминал
 FULL_LINK="vless://${UUID}@[${SERVER_IPv6}]:443?security=reality&encryption=none&pbk=${PUB_KEY}&fp=chrome&type=tcp&flow=xtls-rprx-vision&sni=microsoft.com&sid=${SHORT_ID}#Netcup_Reality"
 
 echo "============================================="
@@ -116,35 +116,28 @@ echo "ShortId (sid):    $SHORT_ID"
 echo "Fingerprint (fp): chrome"
 echo "============================================="
 
-# Генерация QR-кода
+# Генерация компактного QR-кода прямо в терминале
 if command -v qrencode &> /dev/null; then
-    echo " Генерация QR-кода..."
-    qrencode -t PNG -o /root/qrcode.png -l M -s 15 "$FULL_LINK"
-    
-    if [ -f /root/qrcode.png ]; then
-        echo " QR-код сохранён в /root/qrcode.png"
-        
-        # Попытка открыть в eog (для VNC/графической сессии)
-        if command -v eog &> /dev/null; then
-            # Устанавливаем DISPLAY, если не задан (часто нужно в VNC)
-            export DISPLAY=${DISPLAY:-:0}
-            
-            echo " Открываю QR-код в просмотрщике..."
-            eog /root/qrcode.png &
-            echo " Окно с QR-кодом открыто. Наведите камеру телефона."
-            echo " (Окно останется висеть, пока вы его не закроете)"
-        else
-            echo "⚠️ eog не установлен. Установите: sudo apt install eog"
-            echo " Или откройте файл вручную: /root/qrcode.png"
-        fi
-    else
-        echo " Ошибка: не удалось создать QR-код!"
-    fi
+    echo " QR-КОД (наведите камеру телефона на экран):"
+    echo "============================================="
+    # -t ANSIUTF8 - цветной UTF-8
+    # -m 1 - минимальные поля
+    # -s 3 - маленький размер блока
+    qrencode -t ANSIUTF8 -m 1 -s 3 "$FULL_LINK"
+    echo "============================================="
 else
-    echo "⚠️ qrencode не установлен. Установите: sudo apt install qrencode"
+    echo "⚠️ qrencode не установлен"
+    echo "Установите: sudo apt install qrencode"
 fi
 
-echo "============================================="
-echo " Ссылка для ручного копирования:"
+echo ""
+echo "Ссылка для ручного копирования:"
 echo "$FULL_LINK"
+echo "============================================="
+# Сохранение ссылки в файл
+echo "$FULL_LINK" > /root/vless_link.txt
+echo "✅ Ссылка сохранена в файл: /root/vless_link.txt"
+echo ""
+echo "Содержимое файла:"
+cat /root/vless_link.txt
 echo "============================================="
