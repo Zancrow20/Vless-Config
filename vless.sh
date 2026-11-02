@@ -27,6 +27,8 @@ UUID=$(xray uuid)
 KEYS=$(xray x25519)
 PRIV_KEY=$(echo "$KEYS" | grep -i "private" | sed 's/.*: //')
 PUB_KEY=$(echo "$KEYS" | grep -i "public" | sed 's/.*: //')
+# Генерируем случайный shortId (8 символов в hex)
+SHORT_ID=$(openssl rand -hex 8)
 
 # 3. Запись конфигурации
 # ⚠️ ВАЖНО: Замените 2a0a:4cc0:c1:3f20::1 на РЕАЛЬНЫЙ IPv6-адрес вашего сервера!
@@ -57,15 +59,16 @@ cat << EOF > /usr/local/etc/xray/config.json
         "network": "tcp",
         "security": "reality",
         "realitySettings": {
-          "show": false,
-          "dest": "microsoft.com:443",
-          "xver": 0,
-          "serverNames": [
-            "microsoft.com",
-            "www.microsoft.com"
-          ],
-          "privateKey": "$PRIV_KEY"
-        }
+  "show": false,
+  "dest": "microsoft.com:443",
+  "xver": 0,
+  "serverNames": [
+    "microsoft.com",
+    "www.microsoft.com"
+  ],
+  "privateKey": "$PRIV_KEY",
+  "shortIds": ["$SHORT_ID"]
+}
       }
     }
   ],
